@@ -50,7 +50,7 @@ public class main {
     }
 
     // Displays the output file in the console
-    private static void displayOutputFile(String fileName, String extension) {
+    private static String displayOutputFile(String fileName, String extension) {
         String outputPath = OUTPUT_DIR + fileName + extension;
         System.out.println("\nDisplaying output from: " + outputPath);
 
@@ -61,6 +61,7 @@ public class main {
         }
 
         System.out.println(readFromFile(outputPath));
+        return outputPath;
     }
 
     // Writes a list of strings to a file at the specified path
@@ -99,8 +100,8 @@ public class main {
         promptUser("Press Enter to convert assembly to machine code...");
 
         convertToMachineCode(selectedFile);
-        displayOutputFile(selectedFile, OUTPUT_EXTENSIONS[1]);
-        Simulator.main(args);
+        String outfile = displayOutputFile(selectedFile, OUTPUT_EXTENSIONS[1]);
+        Simulator.main(new String[] { outfile });
     }
 }
 

@@ -35,8 +35,17 @@ public class Simulator {
 
     // ฟังก์ชันหลักที่ควบคุมการทำงานของเครื่องจำลอง
     public static void main(String[] args) {
-        // เลือกไฟล์จากโฟลเดอร์
-        String fileName = selectFile("Output/");
+        String fileName;
+
+        // ตรวจสอบว่าได้รับ argument หรือไม่
+        if (args.length > 0) {
+            // ใช้พาธไฟล์ที่ส่งมาจาก main ตัวแรก
+            fileName = args[0];
+        } else {
+            // ถ้าไม่ได้รับ argument ให้เลือกไฟล์ใหม่จาก Output directory
+            fileName = selectFile("Output/");
+        }
+
         if (fileName == null) return;
 
         // โหลดไฟล์และตั้งค่าหน่วยความจำ

@@ -42,6 +42,10 @@ public class Assembler {
         return !labelMap.containsKey(token) && token.length() <= 6;
     }
 
+    private boolean isLabel(String token){
+        return labelMap.containsKey(token);
+    }
+
     // Opcode mapping based on instructions
     public static String getOpcode(String instruction) {
         return switch (instruction) {
@@ -104,7 +108,7 @@ public class Assembler {
         reset();
         parseLine();
 
-        while (tokenizer.hasNext()) {
+        while (tokenizer.hasNext() || !tokens.isEmpty()) {
             int index = 0;
             if (isTestMode) System.out.println("Processing Line: " + (lineCounter + 1));
 
@@ -112,7 +116,7 @@ public class Assembler {
 
             // Check if line starts with instruction or label
             if (!isInstruction(tokens.get(index))) {
-                if (!isValidLabel(tokens.get(index))) {
+                if (!isLabel(tokens.get(index))) {
                     System.out.println("Invalid label found at the beginning of line.");
                     exitWithError(1);
                 } else {
@@ -175,7 +179,7 @@ public class Assembler {
 
     // Map labels to line numbers in the assembly
     private void mapLabels() {
-        while (tokenizer.hasNext()) {
+        while (tokenizer.hasNext() || !tokens.isEmpty()) {
             if (tokens.isEmpty()) parseLine();
             if (!isInstruction(tokens.get(0)) && isValidLabel(tokens.get(0))) {
                 labelMap.put(tokens.get(0), lineCounter);
