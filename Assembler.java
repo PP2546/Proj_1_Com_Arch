@@ -171,6 +171,7 @@ public class Assembler {
             }
 
             machineCodeList.add(currentMachineCode); // Add generated machine code to list
+            System.out.println("Machine Code :  "+currentMachineCode);
             lineCounter++;
             parseLine(); // Parse the next line
         }
