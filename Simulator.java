@@ -72,7 +72,7 @@ public class Simulator {
                 System.out.println(i + ": " + listOfFiles[i].getName());
             }
         }
-
+        
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter file number: ");
         int fileIndex = scanner.nextInt();
@@ -86,7 +86,7 @@ public class Simulator {
     }
 
     // ฟังก์ชันโหลดหน่วยความจำจากไฟล์
-    private static boolean loadMemoryFromFile(State state, String fileName) {
+    protected static boolean loadMemoryFromFile(State state, String fileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -103,7 +103,7 @@ public class Simulator {
     }
 
     // ฟังก์ชันจำลองการทำงานของเครื่อง
-    private static void simulateMachine(State state) {
+    protected static void simulateMachine(State state) {
         int totalInstructions = 0;
 
         while (true) {
@@ -154,13 +154,13 @@ public class Simulator {
     }
 
     // ฟังก์ชันสำหรับคำสั่ง R-Format (ADD, NAND)
-    private static void executeRFormat(State state, ArithmeticOperation operation) {
+    protected static void executeRFormat(State state, ArithmeticOperation operation) {
         int[] args = decodeRFormat(state.mem[state.pc]);
         state.reg[args[2]] = operation.apply(state.reg[args[0]], state.reg[args[1]]);
     }
 
     // ฟังก์ชันสำหรับคำสั่ง Load/Store (LW, SW)
-    private static void executeLoadStore(State state, boolean isLoad) {
+    protected static void executeLoadStore(State state, boolean isLoad) {
         int[] args = decodeIFormat(state.mem[state.pc]);
         int offset = args[2] + state.reg[args[0]];
 
@@ -172,7 +172,7 @@ public class Simulator {
     }
 
     // ฟังก์ชันสำหรับคำสั่ง BEQ
-    private static void executeBranch(State state) {
+    protected static void executeBranch(State state) {
         int[] args = decodeIFormat(state.mem[state.pc]);
         if (state.reg[args[0]] == state.reg[args[1]]) {
             state.pc += args[2];
@@ -180,10 +180,11 @@ public class Simulator {
     }
 
     // ฟังก์ชันสำหรับคำสั่ง JALR
-    private static void executeJALR(State state) {
+    protected static void executeJALR(State state) {
         int[] args = decodeRFormat(state.mem[state.pc]);
         state.reg[args[1]] = state.pc + 1;
-        state.pc = state.reg[args[0]] - 1;
+        state.pc = state.reg[args[0]];
+        //state.pc = state.reg[args[0]] - 1;
     }
 
     // ฟังก์ชันถอดรหัส R-Format
@@ -205,7 +206,7 @@ public class Simulator {
     }
 
     // ฟังก์ชันแปลงเลข 16-bit ให้เป็น signed integer
-    private static int convertNum(int num) {
+    protected static int convertNum(int num) {
         if ((num & (1 << 15)) != 0) {
             return num - (1 << 16);
         }
