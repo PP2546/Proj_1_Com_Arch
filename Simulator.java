@@ -156,7 +156,7 @@ public class Simulator {
     // ฟังก์ชันสำหรับคำสั่ง R-Format (ADD, NAND)
     protected static void executeRFormat(State state, ArithmeticOperation operation) {
         int[] args = decodeRFormat(state.mem[state.pc]);
-        state.reg[args[2]] = operation.apply(state.reg[args[0]] + state.reg[args[1]]);
+        state.reg[args[2]] = operation.apply(state.reg[args[0]], state.reg[args[1]]);
     }
 
     // ฟังก์ชันสำหรับคำสั่ง Load/Store (LW, SW)
