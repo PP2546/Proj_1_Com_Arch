@@ -161,15 +161,29 @@ public class Simulator {
 
     // ฟังก์ชันสำหรับคำสั่ง Load/Store (LW, SW)
     protected static void executeLoadStore(State state, boolean isLoad) {
-        int[] args = decodeIFormat(state.mem[state.pc]);
-        int offset = args[2] + state.reg[args[0]];
+        int[] args = decodeIFormat(state.mem[state.pc]); // args[0] = rs, args[1] = rt, args[2] = offset
+        int baseAddress = state.reg[args[0]]; // rs เป็น base address
+        int offset = args[2]; // offset ที่แยกได้จากคำสั่ง
+
+        int effectiveAddress = baseAddress + offset;
 
         if (isLoad) {
-            state.reg[args[1]] = state.mem[offset];
+            state.reg[args[1]] = state.mem[effectiveAddress]; // rt เป็นรีจิสเตอร์ที่ใช้ในการโหลด
         } else {
-            state.mem[offset] = state.reg[args[1]];
+            state.mem[effectiveAddress] = state.reg[args[1]]; // rt เป็นรีจิสเตอร์ที่ใช้ในการจัดเก็บ
         }
     }
+
+//    protected static void executeLoadStore(State state, boolean isLoad) {
+//        int[] args = decodeIFormat(state.mem[state.pc]);
+//        int offset = args[2] + state.reg[args[0]];
+//
+//        if (isLoad) {
+//            state.reg[args[1]] = state.mem[offset];
+//        } else {
+//            state.mem[offset] = state.reg[args[1]];
+//        }
+//    }
 
     // ฟังก์ชันสำหรับคำสั่ง BEQ
     protected static void executeBranch(State state) {
@@ -186,6 +200,8 @@ public class Simulator {
         state.pc = state.reg[args[0]];
         //state.pc = state.reg[args[0]] - 1;
     }
+
+
 
     // ฟังก์ชันถอดรหัส R-Format
     private static int[] decodeRFormat(int instruction) {
