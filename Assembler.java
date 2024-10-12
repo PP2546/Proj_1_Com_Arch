@@ -13,6 +13,7 @@ public class Assembler {
     private String currentMachineCode = ZERO_BITS;       // Machine code string with initial zero bits
     private static final String ZERO_BITS = "0000000";   // 7-bit zero padding for unused fields (bits 31-25)
     private final List<String> machineCodeList = new ArrayList<>();
+    private String opcode;
 
 
 
@@ -23,12 +24,12 @@ public class Assembler {
     }
 
     // Helper to check if the token is a valid instruction
-    private boolean isInstruction(String token) {
+    static boolean isInstruction(String token) {
         return getOpcode(token) != null;
     }
 
     // Helper to check if a string is an integer
-    private boolean isInteger(String s) {
+    static boolean isInteger(String s) {
         try {
             Integer.parseInt(s);
             return true;
@@ -37,6 +38,7 @@ public class Assembler {
         }
     }
 
+
     // Helper to check if the token is a valid label
     private boolean isValidLabel(String token) {
         return !labelMap.containsKey(token) && token.length() <= 6;
@@ -44,6 +46,11 @@ public class Assembler {
 
     private boolean isLabel(String token){
         return labelMap.containsKey(token);
+    }
+
+    // Getter method สำหรับ labelMap
+    public Map<String, Integer> getLabelMap() {
+        return labelMap;
     }
 
     // Opcode mapping based on instructions
@@ -118,12 +125,12 @@ public class Assembler {
             if (!isInstruction(tokens.get(index))) {
                 if (!isLabel(tokens.get(index))) {
                     System.out.println("Invalid label found at the beginning of line.");
-                    exitWithError(1);
+                    exitWithError();
                 } else {
                     index++;
                     if (!isInstruction(tokens.get(index))) {
                         System.out.println("No instruction found after label.");
-                        exitWithError(1);
+                        exitWithError();
                     }
                 }
             }
@@ -150,12 +157,12 @@ public class Assembler {
                 fields[i] = tokens.get(index + 1 + i);
                 if (!isInteger(fields[i])) {
                     System.out.println("Field " + i + " is not an integer.");
-                    exitWithError(1);
+                    exitWithError();
                 }
                 int fieldValue = Integer.parseInt(fields[i]);
                 if (fieldValue < 0 || fieldValue > 7) {
                     System.out.println("Field " + i + " value out of range (0-7).");
-                    exitWithError(1);
+                    exitWithError();
                 }
                 fields[i] = formatBinary(toBinaryString(fieldValue), 3);
             }
@@ -165,9 +172,9 @@ public class Assembler {
                 case "R" -> generateRType(fields);
                 case "I" -> generateIType(fields, index, instruction);
                 case "J" -> generateJType(fields);
-                case "O" -> generateOType();
+                case "O" -> generateOType(instruction);
                 case "F" -> generateFType(index);
-                default -> exitWithError(1);
+                default -> exitWithError();
             }
 
             machineCodeList.add(currentMachineCode); // Add generated machine code to list
@@ -223,14 +230,14 @@ public class Assembler {
         // Invalid offset (neither label nor integer)
         else {
             System.out.println("Invalid offset encountered: " + offsetField);
-            exitWithError(1);
+            exitWithError();
             return 0;  // Return zero to satisfy compilation; error handling already exits
         }
 
         // Check for valid offset range (-32768 to 32767)
         if (offset > 32767 || offset < -32768) {
             System.out.println("Offset out of range (-32768 to 32767): " + offset);
-            exitWithError(1);
+            exitWithError();
         }
         return offset;
     }
@@ -243,8 +250,10 @@ public class Assembler {
     }
 
     // Generate O-type machine code (no fields)
-    private void generateOType() {
-        currentMachineCode += "0000000000000000000000";  // 22-bit unused
+    private void generateOType(String instruction) {
+        opcode = getOpcode(instruction); // กำหนดค่า opcode ก่อน
+        currentMachineCode += opcode; // เพิ่ม opcode
+        currentMachineCode += "0000000000000000000000"; // 22-bit unused
     }
 
     // Generate F-type machine code (.fill instruction)
@@ -255,10 +264,19 @@ public class Assembler {
         currentMachineCode = formatBinaryWithSign(fillValue, 32);
     }
 
+    public static String addZeroBits(String field, int size) {
+        StringBuilder result = new StringBuilder();
+        while (result.length() + field.length() < size) {
+            result.append('0');
+        }
+        result.append(field);
+
+        return result.toString();
+    }
+
     // Exit program with error code
-    private void exitWithError(int code) {
-        System.out.println("Exiting with error code: " + code);
-        System.exit(code);
+    private void exitWithError() {
+        throw new IllegalArgumentException("Exiting with error code: " + 1);
     }
 
     // Format binary number with specific bit length
