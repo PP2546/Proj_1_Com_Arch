@@ -94,4 +94,5 @@ public class AssemblerTest {
         });
         assertEquals("Exiting with error code: 1", exception.getMessage());
     }
+
 }

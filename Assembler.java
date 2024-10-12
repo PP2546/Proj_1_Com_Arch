@@ -264,7 +264,6 @@ public class Assembler {
         int fillValue = isInteger(value) ? Integer.parseInt(value) : labelMap.get(value);
         currentMachineCode = formatBinaryWithSign(fillValue, 32);
     }
-
     public static String addZeroBits(String field, int size) {
         StringBuilder result = new StringBuilder();
         while (result.length() + field.length() < size) {
