@@ -90,7 +90,7 @@ public class Simulator {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                state.mem[state.numMemory] = Integer.parseInt(line);
+                state.mem[state.numMemory] = (int) Long.parseLong(line);
                 state.numMemory++;
             }
             System.out.println("Loaded " + state.numMemory + " words into memory.");
