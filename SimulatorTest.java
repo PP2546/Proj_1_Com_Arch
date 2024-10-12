@@ -105,7 +105,7 @@ class SimulatorTest {
 
     @Test
     void testLoadMemoryFromFile_ValidFile() throws IOException {
-        String testFileName = "test_valid_memory.txt";
+        String testFileName = "Output/test_valid_memory.txt";
         try (PrintWriter writer = new PrintWriter(testFileName)) {
             writer.println(5);
             writer.println(10);
@@ -128,7 +128,7 @@ class SimulatorTest {
 
     @Test
     void testLoadMemoryFromFile_EmptyFile() throws IOException {
-        String testFileName = "test_empty_memory.txt";
+        String testFileName = "Output/test_empty_memory.txt";
         try (PrintWriter writer = new PrintWriter(testFileName)) {
 
         }
