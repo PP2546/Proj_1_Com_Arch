@@ -9,7 +9,7 @@ public class main {
     private static final String INPUT_DIR = "Input/";
     private static final String OUTPUT_DIR = "Output/";
     private static final String FILE_EXTENSION = ".s";
-    private static final String[] INPUT_FILES = {"TEST", "COMBINATION", "MULTIPLIER", "SUM"};
+    private static final String[] INPUT_FILES = {"TEST", "COMBINATION", "MULTIPLIER", "SUB"};
     private static final String[] OUTPUT_EXTENSIONS = {".bin", ".txt"};
 
     // Displays the list of available input files

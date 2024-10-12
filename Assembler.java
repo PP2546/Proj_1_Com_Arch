@@ -64,6 +64,7 @@ public class Assembler {
             case "jalr"     -> "101";
             case "halt"     -> "110";
             case "noop"     -> "111";
+            case "sub"      -> "000";
             case ".fill"    -> "no-opcode";
             default         -> null;
         };
@@ -72,7 +73,7 @@ public class Assembler {
     // Instruction type mapping
     public static String getInstructionType(String instruction) {
         return switch (instruction) {
-            case "add", "nand"      -> "R";
+            case "add", "nand", "sub"      -> "R";
             case "lw", "sw", "beq"  -> "I";
             case "jalr"             -> "J";
             case "halt", "noop"     -> "O";
@@ -84,7 +85,7 @@ public class Assembler {
     // Number of fields based on instruction
     public static int getFieldCount(String instruction) {
         return switch (instruction) {
-            case "add", "nand"              -> 3;
+            case "add", "nand", "sub"       -> 3;
             case "lw", "sw", "beq", "jalr"  -> 2;
             case "halt", "noop", ".fill"    -> 0;
             default                         -> 0;
